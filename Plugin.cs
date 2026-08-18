@@ -6,10 +6,11 @@ using UnityEngine;
 
 namespace FOVFix
 {
-    [BepInPlugin("com.fontaine.fovfix", "Fontaine-FOVFix", "4.0.1")]
+    [BepInPlugin("com.fontaine.fovfix", "Fontaine-FOVFix", "4.0.2")]
     public class Plugin : BaseUnityPlugin
     {
         private bool _detectedMods = false;
+        private bool _updateFailureLogged = false;
         public static bool RealismIsPresent = false;
 
         public static ConfigEntry<float> test1 { get; set; }
@@ -104,6 +105,8 @@ namespace FOVFix
 
         private void Awake()
         {
+            Utils.ResetStartupLog();
+            Utils.WriteStartupLog("Awake entered.");
             string adsFOV = "1. Player Camera ADS FOV";
             string cameraPostiion = "2. ADS Player Camera Position";
             string toggleZoom = "3. Toggleable Zoom";
@@ -212,19 +215,33 @@ namespace FOVFix
                 }
             };
             
-            Utils.Logger = Logger;  
+            Utils.Logger = Logger;
             FovController = new FovController();
+            Utils.WriteStartupLog("Config bound; enabling patches.");
 
-            new PwaWeaponParamsPatch().Enable();
-            new FreeLookPatch().Enable();
-            new LerpCameraPatch().Enable();
-            new FovRangePatch().Enable();
-            new FovValuePatch().Enable();
-            new AimingSensitivityPatch().Enable();
-            new ScopeSensitivityPatch().Enable();
-            new CloneItemPatch().Enable();
-            new SetPlayerAimingPatch().Enable();
-            new CalculateScaleValueByFovPatch().Enable();
+            EnablePatch("PwaWeaponParamsPatch", () => new PwaWeaponParamsPatch().Enable());
+            EnablePatch("FreeLookPatch", () => new FreeLookPatch().Enable());
+            EnablePatch("LerpCameraPatch", () => new LerpCameraPatch().Enable());
+            EnablePatch("FovRangePatch", () => new FovRangePatch().Enable());
+            EnablePatch("AimingSensitivityPatch", () => new AimingSensitivityPatch().Enable());
+            EnablePatch("ScopeSensitivityPatch", () => new ScopeSensitivityPatch().Enable());
+            EnablePatch("SetPlayerAimingPatch", () => new SetPlayerAimingPatch().Enable());
+            EnablePatch("CalculateScaleValueByFovPatch", () => new CalculateScaleValueByFovPatch().Enable());
+            Utils.WriteStartupLog("Awake complete.");
+        }
+
+        private void EnablePatch(string name, System.Action enable)
+        {
+            try
+            {
+                enable();
+                Utils.WriteStartupLog($"{name} enabled.");
+            }
+            catch (System.Exception ex)
+            {
+                Utils.WriteStartupLog($"{name} failed: {ex}");
+                Logger.LogError(ex);
+            }
         }
 
         private void CheckForMods()
@@ -243,9 +260,21 @@ namespace FOVFix
 
         void Update()
         {
-            if (RealismIsPresent) Plugin.RealCompat.Update();
-            CheckForMods();
-            FovController.ControllerUpdate();
+            try
+            {
+                if (RealismIsPresent) Plugin.RealCompat.Update();
+                CheckForMods();
+                FovController.ControllerUpdate();
+            }
+            catch (System.Exception ex)
+            {
+                if (!_updateFailureLogged)
+                {
+                    _updateFailureLogged = true;
+                    Utils.WriteStartupLog($"Update failed: {ex}");
+                    Logger.LogError(ex);
+                }
+            }
         }
     }
 }

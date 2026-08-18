@@ -2,6 +2,8 @@
 using Comfort.Common;
 using EFT;
 using EFT.InventoryLogic;
+using System;
+using System.IO;
 
 namespace FOVFix
 {
@@ -22,6 +24,30 @@ namespace FOVFix
         public static bool WeaponIsReady = false;
         public static bool IsInHideout = false;
 
+        public static void ResetStartupLog()
+        {
+            try
+            {
+                string pluginFolder = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
+                File.WriteAllText(Path.Combine(pluginFolder, "FOVFix-startup.log"), string.Empty);
+            }
+            catch
+            {
+            }
+        }
+
+        public static void WriteStartupLog(string message)
+        {
+            try
+            {
+                string pluginFolder = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
+                File.AppendAllText(Path.Combine(pluginFolder, "FOVFix-startup.log"), $"[{DateTime.Now:O}] {message}{Environment.NewLine}");
+            }
+            catch
+            {
+            }
+        }
+
         public static Player GetYourPlayer()
         {
             GameWorld gameWorld = Singleton<GameWorld>.Instance;
@@ -31,8 +57,6 @@ namespace FOVFix
         public static bool CheckIsReady()
         {
             GameWorld gameWorld = Singleton<GameWorld>.Instance;
-            SessionResultPanel sessionResultPanel = Singleton<SessionResultPanel>.Instance;
-
             Player player = gameWorld?.MainPlayer;
             if (player != null)
             {
@@ -45,7 +69,7 @@ namespace FOVFix
                 Utils.IsInHideout = false;
             }
 
-            if (gameWorld == null || gameWorld.AllAlivePlayersList == null || gameWorld.MainPlayer == null || sessionResultPanel != null)
+            if (gameWorld == null || gameWorld.MainPlayer == null)
             {
                 Utils.PlayerIsReady = false;
                 Utils.WeaponIsReady = false;
@@ -62,7 +86,7 @@ namespace FOVFix
 
             foreach (string id in scopeTypes) 
             {
-                isScope = mod.GetType() == TemplateIdToObjectMappingsClass.TypeTable[id] ? true : false;
+                isScope = mod.TemplateId == id ? true : isScope;
             }
 
             return isScope;

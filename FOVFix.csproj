@@ -7,7 +7,12 @@
     <Version>4.0.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-	  <OutDir>F:\SP EFT\SPT-406\BepInEx\plugins\</OutDir>
+	  <SptInstallDir Condition="'$(SptInstallDir)' == '' and '$(SPT_INSTALL_DIR)' != ''">$(SPT_INSTALL_DIR)</SptInstallDir>
+	  <SptInstallDir Condition="'$(SptInstallDir)' == ''">D:\SPT</SptInstallDir>
+	  <GameManagedDir>$(SptInstallDir)\EscapeFromTarkov_Data\Managed</GameManagedDir>
+	  <BepInExCoreDir>$(SptInstallDir)\BepInEx\core</BepInExCoreDir>
+	  <SptPluginDir>$(SptInstallDir)\BepInEx\plugins\spt</SptPluginDir>
+	  <OutDir>$(SptInstallDir)\BepInEx\plugins\</OutDir>
 	  <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 	  <CopyProjectReferencesToOutputDirectory>false</CopyProjectReferencesToOutputDirectory>
   </PropertyGroup>
@@ -19,36 +24,43 @@
 
 	<ItemGroup>
     <Reference Include="spt-reflection">
+      <HintPath>$(SptPluginDir)\spt-reflection.dll</HintPath>
       <Private>false</Private>
     </Reference>
 	<Reference Include="ItemComponent.Types">
+	  <HintPath>$(GameManagedDir)\ItemComponent.Types.dll</HintPath>
 	  <Private>false</Private>
 	</Reference>
     <Reference Include="Comfort">
+      <HintPath>$(GameManagedDir)\Comfort.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
+      <HintPath>$(GameManagedDir)\Assembly-CSharp.dll</HintPath>
       <Private>false</Private>
     </Reference>
 	<Reference Include="UnityEngine">
+	  <HintPath>$(GameManagedDir)\UnityEngine.dll</HintPath>
 	  <Private>false</Private>
 	</Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(GameManagedDir)\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GameManagedDir)\UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
 	<Reference Include="UnityEngine.UIModule">
+	  <HintPath>$(GameManagedDir)\UnityEngine.UIModule.dll</HintPath>
 	  <Private>false</Private>
 	</Reference>
 	<Reference Include="Sirenix.Serialization">
-	  <Private>false</Private>
-	</Reference>
-	<Reference Include="RealismMod">
+	  <HintPath>$(GameManagedDir)\Sirenix.Serialization.dll</HintPath>
 	  <Private>false</Private>
 	</Reference>
 	<Reference Include="Unity.Postprocessing.Runtime">
+	  <HintPath>$(GameManagedDir)\Unity.Postprocessing.Runtime.dll</HintPath>
 	  <Private>false</Private>
 	</Reference>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
