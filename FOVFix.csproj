@@ -4,11 +4,11 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>FOVFix</AssemblyName>
     <Description>Fixes EFT FOV (removes FOV decrease when ADS)</Description>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
 	  <SptInstallDir Condition="'$(SptInstallDir)' == '' and '$(SPT_INSTALL_DIR)' != ''">$(SPT_INSTALL_DIR)</SptInstallDir>
-	  <SptInstallDir Condition="'$(SptInstallDir)' == ''">D:\SPT</SptInstallDir>
+	  <SptInstallDir Condition="'$(SptInstallDir)' == ''">D:\SPT415</SptInstallDir>
 	  <GameManagedDir>$(SptInstallDir)\EscapeFromTarkov_Data\Managed</GameManagedDir>
 	  <BepInExCoreDir>$(SptInstallDir)\BepInEx\core</BepInExCoreDir>
 	  <SptPluginDir>$(SptInstallDir)\BepInEx\plugins\spt</SptPluginDir>

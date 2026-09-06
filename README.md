@@ -1,6 +1,6 @@
-# SPT-FOV — Fontaine's FOV Fix for SPT 4.1.2
+# SPT-FOV — Fontaine's FOV Fix for SPT 4.1.5
 
-A port of **Fontaine's FOV Fix** to **SPT 4.1.2**. It fixes Tarkov's field of view
+A port of **Fontaine's FOV Fix** to **SPT 4.1.5**. It fixes Tarkov's field of view
 handling: the FOV slider actually reaches usable values, your weapon stops being
 shoved into the camera at high FOV, aiming and scope sensitivity stay consistent
 across FOV values, and free-look and camera lerp behave properly.
@@ -29,7 +29,7 @@ where it will be announced.
 
 ## Requirements
 
-- **SPT 4.1.2**
+- **SPT 4.1.5**
 
 ## Installation
 
@@ -47,7 +47,7 @@ Configure it in-game through the BepInEx Configuration Manager (F12), under
 
 ## What changed in this port
 
-SPT 4.1.2 renamed or reshaped most of the obfuscated types this mod hooked, so the
+SPT 4.1.x renamed or reshaped most of the obfuscated types this mod hooked, so the
 4.0.1 build no longer loads. This port:
 
 - **Resolves the renamed EFT types.** `GClass1085` → `EFT.Settings.Game.GameSettingsGroup`,
@@ -64,10 +64,10 @@ SPT 4.1.2 renamed or reshaped most of the obfuscated types this mod hooked, so t
   patches enabled, which makes "is it actually loading?" a two-second check.
 
 Two patches are **not** enabled in this build — `FovValuePatch` and `CloneItemPatch` —
-because their target methods no longer resolve on 4.1.2. Core FOV, sensitivity and
+because their target methods no longer resolve on 4.1.5. Core FOV, sensitivity and
 camera behaviour are unaffected.
 
-Verified loading on SPT 4.1.2:
+Verified loading on SPT 4.1.5:
 
 ```
 Config bound; enabling patches.
